@@ -1,5 +1,5 @@
 import os
-from github import Github
+from github import GitHub
 from utility import *
 
 def main():
