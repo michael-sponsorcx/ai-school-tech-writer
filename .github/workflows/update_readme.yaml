@@ -38,8 +38,8 @@ jobs:
         
       - name: Print Environment Variables
         run: |
-          echo "PR_NUMBER: $PR_NUMBER"
-          echo "COMMIT_SHA: $COMMIT_SHA"
+          echo "PR_NUMBER: $pull_request_number"
+          echo "COMMIT_SHA: $commit_sha"
 
       # Run the Python script
       - name: Generate Updated README
