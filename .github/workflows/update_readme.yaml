@@ -35,6 +35,11 @@ jobs:
           commit_sha=$(jq -r '.pull_request.merge_commit_sha' "$GITHUB_EVENT_PATH")
           echo "pull_request_number=$pr_num" >> $GITHUB_ENV
           echo "commit_sha=$commit_sha" >> $GITHUB_ENV
+        
+      - name: Print Environment Variables
+        run: |
+          echo "PR_NUMBER: $PR_NUMBER"
+          echo "COMMIT_SHA: $COMMIT_SHA"
 
       # Run the Python script
       - name: Generate Updated README
@@ -42,7 +47,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           REPO_PATH: ${{ github.repository }}
-          PR_NUMBER: ${{ env.pr_num }}
+          PR_NUMBER: ${{ env.pull_request_number }}
           COMMIT_SHA: ${{ env.commit_sha }}
         run: python main.py
       
