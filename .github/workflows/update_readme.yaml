@@ -42,7 +42,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           REPO_PATH: ${{ github.repository }}
-          PR_NUMBER: ${{ env.pull_reqeust_number }}
+          PR_NUMBER: ${{ env.pr_num }}
           COMMIT_SHA: ${{ env.commit_sha }}
         run: python main.py
       
