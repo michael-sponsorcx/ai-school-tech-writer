@@ -67,6 +67,7 @@ def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content):
         f"FILE_CONTENT: {sql_file}\n"
         f"CURRENT_YML: {model_file}\n"
         f"Update the CURRENT_YML to include dbt relationship integrity tests for the model matching {changes}. Use the FILE_CONTENT to help inform the relationships. Create these test using the same structure as the other tests.\n"
+        "Don't delete existing models or comments.\n"
         "Please don't wrap code in ``` or any other block notation.\n"
         "Updated YML:\n"
 

@@ -73,14 +73,16 @@ final as (
     select
         ea.agreement_id,
         ea.account_id,
-        ea.property_id
+        ea.property_id,
+        ea.org_id
 
     from expiring_agreements ea
     union all
     select
         eavw.agreement_id,
         eavw.account_id,
-        eavw.property_id
+        eavw.property_id,
+        eavw.org_id
 
     from expiring_agreements_salesforce eavw
 
