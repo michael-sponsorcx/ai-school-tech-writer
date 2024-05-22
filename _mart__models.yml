@@ -11,6 +11,9 @@ models:
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: org_id
+              to: ref('expiring_agreements')
       - name: org_name
         tests:
           - not_null
@@ -35,15 +38,15 @@ models:
           - not_null
           - dbt_expectations.expect_column_to_exist
           - relationships:
-              field: id
-              to: ref('dim_agreements')
+              field: agreement_id
+              to: ref('expiring_agreements')
       - name: org_id
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
           - relationships:
-              field: id
-              to: ref('dim_organizations')
+              field: org_id
+              to: ref('expiring_agreements')
       - name: account_id
         tests:
           - not_null
@@ -109,7 +112,7 @@ models:
       - name: account_id
         tests:
           - dbt_expectations.expect_column_to_exist
-          - relationships: # this is what thoughtspot expects but it's often going to give an error unless 
+          - relationships: 
               field: id
               to: ref('dim_accounts')
               meta:
