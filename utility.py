@@ -83,7 +83,7 @@ def update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readm
     new_branch_name = f'update-readme-{commit_sha[:7]}'
     new_branch = repo.create_git_ref(ref=f'refs/heads/{new_branch_name}', sha=main_branch.commit.sha)
 
-    repo.update_file('README.md', commit_message, updated_readme, readme_sha, branch=new_branch_name)
+    # repo.update_file('README.md', commit_message, updated_readme, readme_sha, branch=new_branch_name)
     repo.update_file('dbt/_mart__models.yml', commit_message, updated_dbt_yml, readme_sha, branch=new_branch_name)
 
     pr_title = 'AI PR: Update README and yml based on recent change'
