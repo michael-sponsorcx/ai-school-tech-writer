@@ -21,3 +21,6 @@ Embrace your creativity and personalize this project to craft a solution that un
 - **Sensitive Information:** If your implementation involves sensitive information, you are not required to submit a public repository. Instead, a detailed review of your project through a Loom video is acceptable, where you can demonstrate the functionality and discuss the technologies used without exposing confidential data.
 
 ---
+
+## Updates
+- Updated the current yml with relationship integrity dbt tests for attributes that have a name matching a filename I asked you to review above.
