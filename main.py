@@ -26,10 +26,13 @@ def main():
     pull_request_diffs = [
         {
             "filename": file.filename,
-            "patch": file.patch 
+            "patch": file.patch,
+            "raw_data": file.raw_data 
         } 
         for file in pull_request.get_files()
     ]
+
+    # modified_sql_content = repo.get_contents(pull_request.get_files()[0])
     
     # Get the commit messages associated with the pull request
     commit_messages = [commit.commit.message for commit in pull_request.get_commits()]
