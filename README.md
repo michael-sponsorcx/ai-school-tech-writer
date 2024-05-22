@@ -21,3 +21,22 @@ Embrace your creativity and personalize this project to craft a solution that un
 - **Sensitive Information:** If your implementation involves sensitive information, you are not required to submit a public repository. Instead, a detailed review of your project through a Loom video is acceptable, where you can demonstrate the functionality and discuss the technologies used without exposing confidential data.
 
 ---
+
+Please review the following filenames:
+expiring_agreements.sql
+main.py
+utility.py
+
+Please review the sql content for the above file:
+```
+<raw sql content>
+```
+
+Here is the current yml file content:
+```yaml
+<current yml file content>
+```
+
+Update the current yml with relationship integrity dbt tests for models that have a similar name to a filename I asked you to review above. Use the provided sql to help inform the relationships. Please don't wrap code in ``` or any other block notation.
+
+Updated YML:
