@@ -33,7 +33,7 @@ def format_data_for_openai(diffs, readme_content, commit_messages):
 
     return prompt
 
-def format_dbt_yml_data_for_openai(diffs, yml_content):
+def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content):
     prompt = None
 
     # # Combine the changes into a string with clear delineation.
@@ -50,13 +50,13 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
         if file["filename"].endswith('.sql')
     ])
 
-    sql_contnet = '\n'.join([
-        f'{file["raw_data"]}\n'
-        for file in diffs
-        if file["filename"].endswith('.sql')
-    ])
-
-    print(sql_contnet)
+    # sql_contnet = '\n'.join([
+    #     f'{file["raw_data"]}\n'
+    #     for file in diffs
+    #     if file["filename"].endswith('.sql')
+    # ])
+    
+    print(sql_content)
 
     # Decode the README content
     model_file = base64.b64decode(yml_content.content).decode('utf-8')
@@ -66,13 +66,15 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
         "Please review the following filenames:\n"
         f"{changes}\n"
         "Please review the sql content for the above file:\n"
-        f"{sql_contnet}"
+        f"{sql_content}"
         "Here is the current yml file content:\n"
         f"{model_file}\n"
         "Update the current yml with relationship integrity dbt tests for models that have a similar name to a filename I asked you to review above. Use the provided sql to help inform the relationships.\n"
         "Please don't wrap code in ``` or any other block notation.\n"
         "Updated YML:\n"
     )
+
+    print('prompt: ', prompt)
 
     return prompt
 
