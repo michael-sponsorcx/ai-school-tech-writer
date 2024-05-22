@@ -60,7 +60,7 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
     return prompt
 
 def call_openai(prompt, system_prompt):
-    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-4o')
+    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo-0125')
 
     try:
         messages = [
