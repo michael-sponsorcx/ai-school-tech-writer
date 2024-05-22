@@ -45,7 +45,7 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
 
     # Combine the changes into a string with clear delineation.
     changes = '\n'.join([
-        f'File: {file["filename"]}\n'
+        f'{file["filename"]}\n'
         for file in diffs
         if file["filename"].endswith('.sql')
     ])
@@ -61,7 +61,7 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
         f"{changes}\n"
         "Here is the current yml file content:\n"
         f"{model_file}\n"
-        "Update the current yml with relationship integrity dbt tests for attributes that have a name matching a filename I asked you to review above.\n"
+        "Update the current yml with relationship integrity dbt tests for models that have a similar name to a filename I asked you to review above.\n"
         "Please don't wrap code in ``` or any other block notation.\n"
         "Updated YML:\n"
     )
