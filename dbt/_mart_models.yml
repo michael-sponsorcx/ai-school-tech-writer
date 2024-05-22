@@ -1,0 +1,170 @@
+```yaml
+version: 2
+
+models:
+  - name: activities
+    columns:
+      - name: activity_relationship_id
+        tests:
+          - unique
+          - not_null
+      - name: org_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: org_name
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: created_at
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: activity_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: account_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+  - name: agreement_revenue
+    columns:
+      - name: agreement_id
+        tests:
+          - unique
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: id
+              to: ref('dim_agreements')
+      - name: org_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: id
+              to: ref('dim_organizations')
+      - name: account_id
+        tests:
+          - not_null
+          - relationships:
+              field: id
+              to: ref('dim_accounts')
+      - name: property_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: property_id
+              to: ref('dim_user_permissions')
+          - relationships:
+              field: id
+              to: ref('dim_properties')
+      - name: fiscal_year_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: id
+              to: ref('dim_fiscal_years')
+      - name: account_manager_id
+        meta:
+          ts_column_type: attribute
+          ts_additive: no
+        tests:
+          - relationships:
+              field: id
+              to: ref('dim_users')    
+              meta:
+                ts_join_cardinality: many_to_one
+                ts_join_type: inner
+                ts_join_name: CONTACTS_to_DIM_ORGANIZATIONS
+  - name: contacts
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: org_id
+        description: unique id for org dimension
+        meta:
+          ts_column_type: attribute
+          ts_additive: no
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: id
+              to: ref('dim_organizations')    
+              meta:
+                ts_join_cardinality: many_to_one
+                ts_join_type: inner
+                ts_join_name: CONTACTS_to_DIM_ORGANIZATIONS
+      - name: property_id
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: id
+              to: ref('dim_properties')
+      - name: account_id
+        tests:
+          - dbt_expectations.expect_column_to_exist
+          - relationships: # this is what thoughtspot expects but it's often going to give an error unless 
+              field: id
+              to: ref('dim_accounts')
+              meta:
+                  ts_join_type: left_outer
+  - name: expiring_agreements
+    columns:
+      - name: agreement_id
+        tests:
+          - not_null
+          - unique
+          - dbt_expectations.expect_column_to_exist
+      - name: property_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: expiring_fiscal_year
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+  - name: fulfillment_by_type
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+          - dbt_expectations.expect_column_to_exist
+      - name: org_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: property_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: fiscal_year_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+  - name: inventory_rate_analysis
+    columns:
+      - name: id
+        tests:
+          - not_null
+          - unique
+          - dbt_expectations.expect_column_to_exist
+      - name: org_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: property_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+      - name: fiscal_year_id
+        tests:
+          - dbt_expectations.expect_column_to_exist
+```
