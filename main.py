@@ -17,7 +17,7 @@ def main():
     readme_content = repo.get_contents("README.md")
 
     yml_content = repo.get_contents("_mart__models.yml")
-    
+    sql_content = repo.get_contents("expiring_agreements.sql")
     # print(readme_content)
     # Fetch pull request by number
     pull_request = repo.get_pull(pull_request_number)
@@ -32,14 +32,14 @@ def main():
         for file in pull_request.get_files()
     ]
 
-    # modified_sql_content = repo.get_contents(pull_request.get_files()[0])
+    # modified_sql_content = repo.get_contents(pull_request_diffs[0]['filename'])
     
     # Get the commit messages associated with the pull request
     commit_messages = [commit.commit.message for commit in pull_request.get_commits()]
 
     # Format data for OpenAI prompt
     prompt_readme = format_data_for_openai(pull_request_diffs, readme_content, commit_messages)
-    prompt_dbt_yml = format_dbt_yml_data_for_openai(pull_request_diffs, yml_content)
+    prompt_dbt_yml = format_dbt_yml_data_for_openai(pull_request_diffs, yml_content, sql_content)
 
     system_prompt_readme = 'You are an AI trained to help with updating README files based commit messages and code files.'
     system_prompt_dbt_yml = 'You are an AI trained to help with adding DTB test based commited yml and sql files.'
