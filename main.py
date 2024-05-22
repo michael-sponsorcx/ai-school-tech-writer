@@ -46,7 +46,7 @@ def main():
     updated_dbt_yml = call_openai(prompt_dbt_yml, system_prompt_dbt_yml)
 
     # Create PR for Updated PR
-    update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readme_content.sha)
+    update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readme_content.sha, yml_content.sha)
 
 if __name__ == '__main__':
     main()

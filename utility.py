@@ -53,7 +53,7 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
         f"{changes}\n"
         "Here is the current yml file content:\n"
         f"{model_file}\n"
-        "Consider the code changes, determine if there are dbt tests that could be added to the yml. Make sure to only update the yml attributes where the name matches the name of a modified file.\n"
+        "Consider the code changes, update the yml attributes where the name matches the name of a modified file.\n"
         "Updated YML:\n"
     )
 
@@ -76,15 +76,15 @@ def call_openai(prompt, system_prompt):
     except Exception as e:
         print(f'Error making LLM call: {e}')
 
-def update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readme_sha):
-    commit_message = 'AI COMMIT: Proposed README updated based on recent code changes.'
+def update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readme_sha, yml_sha):
+    commit_message = 'AI COMMIT: Proposed README or yml updated based on recent code changes.'
     commit_sha = os.getenv('COMMIT_SHA')
     main_branch = repo.get_branch('main')
     new_branch_name = f'update-readme-{commit_sha[:7]}'
     new_branch = repo.create_git_ref(ref=f'refs/heads/{new_branch_name}', sha=main_branch.commit.sha)
 
-    # repo.update_file('README.md', commit_message, updated_readme, readme_sha, branch=new_branch_name)
-    repo.update_file('dbt/_mart__models.yml', commit_message, updated_dbt_yml, readme_sha, branch=new_branch_name)
+    repo.update_file('README.md', commit_message, updated_readme, readme_sha, branch=new_branch_name)
+    repo.update_file('_mart__models.yml', commit_message, updated_dbt_yml, yml_sha, branch=new_branch_name)
 
     pr_title = 'AI PR: Update README and yml based on recent change'
     pr_body = 'This is an AI PR. Please review the README and YML'
