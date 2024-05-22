@@ -33,12 +33,38 @@ def format_data_for_openai(diffs, readme_content, commit_messages):
 
     return prompt
 
-def call_openai(prompt):
+def format_dbt_yml_data_for_openai(diffs, yml_content):
+    prompt = None
+
+    # Combine the changes into a string with clear delineation.
+    changes = '\n'.join([
+        f'File: {file["filename"]}\nDiff: \n{file["patch"]}\n'
+        for file in diffs
+        if file["filename"].endswith('.sql')
+    ])
+
+    # Decode the README content
+    model_file = base64.b64decode(yml_content.content).decode('utf-8')
+
+    # Construct the prompt with clear instructions for the LLM.
+    prompt = (
+        "Please review the following sql code changes from a GitHub pull request:\n"
+        "Code changes from Pull Request:\n"
+        f"{changes}\n"
+        "Here is the current yml file content:\n"
+        f"{model_file}\n"
+        "Consider the code changes, determine if there are dbt tests that could be added to the yml. Make sure to only update the yml attributes where the name matches one of the modified files.\n"
+        "Updated YML:\n"
+    )
+
+    return prompt
+
+def call_openai(prompt, system_prompt):
     client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo-0125')
 
     try:
         messages = [
-            { 'role': 'system', 'content': 'You are an AI trained to help with updating README files based commit messages and code files.'},
+            { 'role': 'system', 'content': system_prompt},
             { 'role': 'user', 'content': prompt }
         ]
 
@@ -50,7 +76,7 @@ def call_openai(prompt):
     except Exception as e:
         print(f'Error making LLM call: {e}')
 
-def update_readme_and_create_pr(repo, updated_readme, readme_sha):
+def update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readme_sha):
     commit_message = 'AI COMMIT: Proposed README updated based on recent code changes.'
     commit_sha = os.getenv('COMMIT_SHA')
     main_branch = repo.get_branch('main')
@@ -58,9 +84,10 @@ def update_readme_and_create_pr(repo, updated_readme, readme_sha):
     new_branch = repo.create_git_ref(ref=f'refs/heads/{new_branch_name}', sha=main_branch.commit.sha)
 
     repo.update_file('README.md', commit_message, updated_readme, readme_sha, branch=new_branch_name)
+    repo.update_file('dbt/_mart_models.yml', commit_message, updated_dbt_yml, readme_sha, branch=new_branch_name)
 
-    pr_title = 'AI PR: Update README based on recent change'
-    pr_body = 'This is an AI PR. Please review the README'
+    pr_title = 'AI PR: Update README and yml based on recent change'
+    pr_body = 'This is an AI PR. Please review the README and YML'
     pull_request = repo.create_pull(title=pr_title, body=pr_body, head=new_branch_name, base='main')
 
     return pull_request
