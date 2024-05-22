@@ -121,10 +121,16 @@ models:
           - not_null
           - unique
           - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: agreement_id
+              to: ref('agreement_revenue')
       - name: property_id
         tests:
           - not_null
           - dbt_expectations.expect_column_to_exist
+          - relationships:
+              field: property_id
+              to: ref('dim_properties')
       - name: expiring_fiscal_year
         tests:
           - not_null
