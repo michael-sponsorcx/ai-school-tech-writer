@@ -60,12 +60,13 @@ def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content):
 
     # Decode the README content
     model_file = base64.b64decode(yml_content.content).decode('utf-8')
+    sql_file = base64.b64decode(yml_content.content).decode('utf-8')
 
     # Construct the prompt with clear instructions for the LLM.
     prompt = (
-        f"FILE_CONTENT: {sql_content}\n"
-        f"CURRENT_YML: {yml_content}\n"
-        f"Update the CURRENT_YML with relationship integrity dbt tests for the model matching {changes}. Use the FILE_CONTENT to help inform the relationships.\n"
+        f"FILE_CONTENT: {sql_file}\n"
+        f"CURRENT_YML: {model_file}\n"
+        f"Update the CURRENT_YML to include dbt relationship integrity tests for the model matching {changes}. Use the FILE_CONTENT to help inform the relationships. Create these test using the same structure as the other tests.\n"
         "Please don't wrap code in ``` or any other block notation.\n"
         "Updated YML:\n"
 
