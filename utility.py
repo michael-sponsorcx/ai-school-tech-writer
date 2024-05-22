@@ -36,9 +36,16 @@ def format_data_for_openai(diffs, readme_content, commit_messages):
 def format_dbt_yml_data_for_openai(diffs, yml_content):
     prompt = None
 
+    # # Combine the changes into a string with clear delineation.
+    # changes = '\n'.join([
+    #     f'File: {file["filename"]}\nDiff: \n{file["patch"]}\n'
+    #     for file in diffs
+    #     if file["filename"].endswith('.sql')
+    # ])
+
     # Combine the changes into a string with clear delineation.
     changes = '\n'.join([
-        f'File: {file["filename"]}\nDiff: \n{file["patch"]}\n'
+        f'File: {file["filename"]}\n'
         for file in diffs
         if file["filename"].endswith('.sql')
     ])
@@ -48,19 +55,19 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
 
     # Construct the prompt with clear instructions for the LLM.
     prompt = (
-        "Please review the following sql code changes from a GitHub pull request:\n"
-        "Code changes from Pull Request:\n"
+        "Please review the following file names:\n"
         f"{changes}\n"
         "Here is the current yml file content:\n"
         f"{model_file}\n"
-        "Consider the code changes, add or update relationship tests for yml attributes where the attribute name matches the name of a modified file.\n"
+        "Create or update relationship integrity dbt tests for attributes that have a corresponding filename I asked you to review above.\n"
+        "Please don't wrap code in ``` or any other block notation.\n"
         "Updated YML:\n"
     )
 
     return prompt
 
 def call_openai(prompt, system_prompt):
-    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo-0125')
+    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-4o')
 
     try:
         messages = [

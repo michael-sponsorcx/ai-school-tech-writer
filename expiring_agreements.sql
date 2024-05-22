@@ -74,7 +74,8 @@ final as (
         ea.agreement_id,
         ea.account_id,
         ea.property_id,
-        ea.org_id
+        ea.org_id,
+        ea.one
 
     from expiring_agreements ea
     union all
@@ -82,7 +83,8 @@ final as (
         eavw.agreement_id,
         eavw.account_id,
         eavw.property_id,
-        eavw.org_id
+        eavw.org_id,
+        eavw.one
 
     from expiring_agreements_salesforce eavw
 
