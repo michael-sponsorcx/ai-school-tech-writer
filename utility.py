@@ -50,6 +50,8 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
         if file["filename"].endswith('.sql')
     ])
 
+    print(changes)
+
     # Decode the README content
     model_file = base64.b64decode(yml_content.content).decode('utf-8')
 
@@ -59,7 +61,7 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
         f"{changes}\n"
         "Here is the current yml file content:\n"
         f"{model_file}\n"
-        "Create relationship integrity dbt tests for attributes that have a name matching a filename I asked you to review above. Please don't delete or update any existing code, only make additions.\n"
+        "Update the current yml with relationship integrity dbt tests for attributes that have a name matching a filename I asked you to review above.\n"
         "Please don't wrap code in ``` or any other block notation.\n"
         "Updated YML:\n"
     )
