@@ -53,14 +53,14 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
         f"{changes}\n"
         "Here is the current yml file content:\n"
         f"{model_file}\n"
-        "Consider the code changes, update the yml attributes where the name matches the name of a modified file.\n"
+        "Consider the code changes, add or update relationship tests for yml attributes where the attribute name matches the name of a modified file.\n"
         "Updated YML:\n"
     )
 
     return prompt
 
 def call_openai(prompt, system_prompt):
-    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo-0125')
+    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-4o')
 
     try:
         messages = [
