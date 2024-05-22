@@ -55,11 +55,11 @@ def format_dbt_yml_data_for_openai(diffs, yml_content):
 
     # Construct the prompt with clear instructions for the LLM.
     prompt = (
-        "Please review the following file names:\n"
+        "Please review the following filenames:\n"
         f"{changes}\n"
         "Here is the current yml file content:\n"
         f"{model_file}\n"
-        "Create or update relationship integrity dbt tests for attributes that have a corresponding filename I asked you to review above.\n"
+        "Create relationship integrity dbt tests for attributes that have a name matching a filename I asked you to review above. Please don't delete or update any existing code, only make additions.\n"
         "Please don't wrap code in ``` or any other block notation.\n"
         "Updated YML:\n"
     )
