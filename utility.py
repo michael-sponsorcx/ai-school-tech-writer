@@ -60,7 +60,7 @@ def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content):
 
     # Decode the README content
     model_file = base64.b64decode(yml_content.content).decode('utf-8')
-    sql_file = base64.b64decode(yml_content.content).decode('utf-8')
+    sql_file = base64.b64decode(sql_content.content).decode('utf-8')
 
     # Construct the prompt with clear instructions for the LLM.
     prompt = (
