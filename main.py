@@ -16,7 +16,7 @@ def main():
     # Fetch README content (assuming README.md)
     readme_content = repo.get_contents("README.md")
 
-    yml_content = repo.get_contents("dbt/_mart__models.yml")
+    yml_content = repo.get_contents("_mart__models.yml")
     
     # print(readme_content)
     # Fetch pull request by number
