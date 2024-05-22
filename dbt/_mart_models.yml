@@ -1,0 +1,9 @@
+```yaml
+models:
+  - name: expiring_agreements
+    columns:
+      - name: org_id
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_to_exist
+```
