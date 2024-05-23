@@ -39,14 +39,17 @@ def main():
 
     # Format data for OpenAI prompt
     prompt_readme = format_data_for_openai(pull_request_diffs, readme_content, commit_messages)
-    prompt_dbt_yml = format_dbt_yml_data_for_openai(pull_request_diffs, yml_content, sql_content)
+    prompt_database_attributes = 'without formatting, list the attribute names associated with an expiring agreement'
 
     system_prompt_readme = 'You are an AI trained to help with updating README files based commit messages and code files.'
     system_prompt_dbt_yml = 'You are an AI trained to help with adding DTB test based commited yml and sql files.'
 
     # Call OpenAI to generate the updated README content
     updated_readme = call_openai(prompt_readme, system_prompt_readme)
-    updated_dbt_yml = call_openai(prompt_dbt_yml, system_prompt_dbt_yml)
+    database_attributes = call_openai(prompt_database_attributes, system_prompt_dbt_yml)
+
+    prompt_dbt_yml = format_dbt_yml_data_for_openai(pull_request_diffs, yml_content, sql_content)
+    updated_dbt_yml = call_openai(prompt_dbt_yml, system_prompt_dbt_yml, database_attributes)
 
     # Create PR for Updated PR
     update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readme_content.sha, yml_content.sha)

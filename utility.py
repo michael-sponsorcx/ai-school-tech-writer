@@ -2,6 +2,11 @@ import os
 import base64
 from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers.string import StrOutputParser
+from langchain_pinecone import PineconeVectorStore
+from langchain_openai import OpenAIEmbeddings
+
+PINECONE_INDEX="dbt-models-snowflake"
+os.environ['PINECONE_API_KEY'] = os.getenv('PINECONE_API_KEY')
 
 def format_data_for_openai(diffs, readme_content, commit_messages):
     prompt = None
@@ -33,7 +38,7 @@ def format_data_for_openai(diffs, readme_content, commit_messages):
 
     return prompt
 
-def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content):
+def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content, database_attributes):
     prompt = None
 
     # # Combine the changes into a string with clear delineation.
@@ -60,33 +65,50 @@ def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content):
 
     # Decode the README content
     model_file = base64.b64decode(yml_content.content).decode('utf-8')
-    sql_file = base64.b64decode(sql_content.content).decode('utf-8')
+    # sql_file = base64.b64decode(sql_content.content).decode('utf-8')
 
-    # Construct the prompt with clear instructions for the LLM.
     prompt = (
-        f"FILE_CONTENT: {sql_file}\n"
-        f"CURRENT_YML: {model_file}\n"
-        f"Update the CURRENT_YML to include dbt relationship integrity tests for the model matching {changes}. Use the FILE_CONTENT to help inform the relationships. Create these test using the same structure as the other tests.\n"
-        "Don't delete existing models or comments.\n"
-        "Please don't wrap code in ``` or any other block notation.\n"
-        "Updated YML:\n"
-
-        # "Please review the following filenames:\n"
-        # f"{changes}\n"
-        # "Please review the sql content for the above file:\n"
-        # f"{sql_content}\n"
-        # "Here is the current yml file content:\n"
-        # f"{model_file}\n"
-        # "Update the current yml with relationship integrity dbt tests for models that have a similar name to a filename I asked you to review above. Use the provided sql to help inform the relationships.\n"
-        # "Please don't wrap code in ``` or any other block notation.\n"
-        # "Updated YML:\n"
+        f"Update the CURRENT_YML with relationship integrity dbt tests for expiring_agreements. Also add the attribtues {database_attributes} to expiring_aggrements. Test field name should be id.\n"
+        f"CURRENT YML: {model_file}\n"
+        "Please don't wrap the response in ``` or any other block notation.\n"
     )
+    # Construct the prompt with clear instructions for the LLM.
+    # prompt = (
+    #     f"FILE_CONTENT: {sql_file}\n"
+    #     f"CURRENT_YML: {model_file}\n"
+    #     f"Update the CURRENT_YML to include dbt relationship integrity tests for the model matching {changes}. Use the FILE_CONTENT to help inform the relationships. Create these test using the same structure as the other tests.\n"
+    #     "Don't delete existing models or comments.\n"
+    #     "Please don't wrap code in ``` or any other block notation.\n"
+    #     "Updated YML:\n"
+
+    #     # "Please review the following filenames:\n"
+    #     # f"{changes}\n"
+    #     # "Please review the sql content for the above file:\n"
+    #     # f"{sql_content}\n"
+    #     # "Here is the current yml file content:\n"
+    #     # f"{model_file}\n"
+    #     # "Update the current yml with relationship integrity dbt tests for models that have a similar name to a filename I asked you to review above. Use the provided sql to help inform the relationships.\n"
+    #     # "Please don't wrap code in ``` or any other block notation.\n"
+    #     # "Updated YML:\n"
+    # )
 
     print('prompt: ', prompt)
 
     return prompt
 
-def call_openai(prompt, system_prompt):
+def format_dbt_database_data_for_openai(yml_content, sql_content):
+    prompt = None
+
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+    document_vectorstore = PineconeVectorStore(index_name=PINECONE_INDEX, embedding=embeddings)
+    retriever = document_vectorstore.as_retriever()
+
+    # Construct the prompt with clear instructions for the LLM.
+    prompt = 'without formatting, list the attribute names associated with an expiring agreement'
+
+    return prompt
+
+def call_openai(prompt, system_prompt, database_attributes):
     client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo')
 
     try:
