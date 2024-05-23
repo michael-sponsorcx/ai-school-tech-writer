@@ -108,7 +108,7 @@ def format_dbt_database_data_for_openai(yml_content, sql_content):
 
     return prompt
 
-def call_openai(prompt, system_prompt, database_attributes):
+def call_openai(prompt, system_prompt):
     client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo')
 
     try:

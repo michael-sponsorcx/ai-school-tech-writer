@@ -48,8 +48,8 @@ def main():
     updated_readme = call_openai(prompt_readme, system_prompt_readme)
     database_attributes = call_openai(prompt_database_attributes, system_prompt_dbt_yml)
 
-    prompt_dbt_yml = format_dbt_yml_data_for_openai(pull_request_diffs, yml_content, sql_content)
-    updated_dbt_yml = call_openai(prompt_dbt_yml, system_prompt_dbt_yml, database_attributes)
+    prompt_dbt_yml = format_dbt_yml_data_for_openai(pull_request_diffs, yml_content, sql_content, database_attributes)
+    updated_dbt_yml = call_openai(prompt_dbt_yml, system_prompt_dbt_yml)
 
     # Create PR for Updated PR
     update_readme_yml_and_create_pr(repo, updated_readme, updated_dbt_yml, readme_content.sha, yml_content.sha)
