@@ -21,3 +21,5 @@ Embrace your creativity and personalize this project to craft a solution that un
 - **Sensitive Information:** If your implementation involves sensitive information, you are not required to submit a public repository. Instead, a detailed review of your project through a Loom video is acceptable, where you can demonstrate the functionality and discuss the technologies used without exposing confidential data.
 
 ---
+
+Context: [Document(page_content='AGREEMENT_ID: 2713\nACCOUNT_ID: 5441\nPROPERTY_ID: None\nORG_ID: 71\nEXPIRING_FISCAL_YEAR: FY 2022-2023'), Document(page_content='AGREEMENT_ID: 2775\nACCOUNT_ID: 6494\nPROPERTY_ID: None\nORG_ID: 71\nEXPIRING_FISCAL_YEAR: FY 2022-2023'), Document(page_content='AGREEMENT_ID: 3321\nACCOUNT_ID: 7958\nPROPERTY_ID: 187\nORG_ID: 28\nEXPIRING_FISCAL_YEAR: FY 2022'), Document(page_content='AGREEMENT_ID: 2452\nACCOUNT_ID: 3271\nPROPERTY_ID: 309\nORG_ID: 45\nEXPIRING_FISCAL_YEAR: FY 2022')]
