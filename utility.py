@@ -4,6 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers.string import StrOutputParser
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai import OpenAIEmbeddings
+from langchain.prompts.prompt import PromptTemplate
 
 PINECONE_INDEX="dbt-models-snowflake"
 os.environ['PINECONE_API_KEY'] = os.getenv('PINECONE_API_KEY')
@@ -96,28 +97,26 @@ def format_dbt_yml_data_for_openai(diffs, yml_content, sql_content, database_att
 
     return prompt
 
-def format_dbt_database_data_for_openai(yml_content, sql_content):
-    prompt = None
+def call_openai(prompt, system_prompt):
+    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo', temperature=0.0)
 
+    # access vector datastore of my database
     embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
     document_vectorstore = PineconeVectorStore(index_name=PINECONE_INDEX, embedding=embeddings)
     retriever = document_vectorstore.as_retriever()
+    context = retriever.get_relevant_documents(prompt)
 
-    # Construct the prompt with clear instructions for the LLM.
-    prompt = 'without formatting, list the attribute names associated with an expiring agreement'
-
-    return prompt
-
-def call_openai(prompt, system_prompt):
-    client = ChatOpenAI(api_key=os.getenv('OPEN_AI_KEY'), model='gpt-3.5-turbo')
+    # Adding context to our prompt
+    template = PromptTemplate(template="{query} Context: {context}", input_variables=["query", "context"])
+    prompt_with_context = template.invoke({"query": prompt, "context": context})
 
     try:
-        messages = [
-            { 'role': 'system', 'content': system_prompt},
-            { 'role': 'user', 'content': prompt }
-        ]
+        # messages = [
+        #     { 'role': 'system', 'content': system_prompt},
+        #     { 'role': 'user', 'content': prompt_with_context }
+        # ]
 
-        response = client.invoke(input=messages)
+        response = client.invoke(input=prompt_with_context)
         parser = StrOutputParser()
         content = parser.invoke(input=response)
 
